@@ -12,7 +12,29 @@ Se utilizó Codex como asistente y agente de desarrollo para analizar el proyect
 
 El punto de partida fue construir un MVP académico llamado EcoTrack AI con Next.js, TypeScript y Tailwind CSS. Se definió una aplicación web para pequeños negocios, sin base de datos, autenticación, APIs externas ni librerías innecesarias. También se pidió una interfaz minimalista, profesional y relacionada con sostenibilidad, con tonos verdes, blanco y gris.
 
-## 4. Desarrollo iterativo
+## 4. Prompts principales utilizados
+
+> "Quiero construir un MVP académico llamado EcoTrack AI" con Next.js, TypeScript y Tailwind CSS. "Por ahora NO uses: bases de datos, autenticación, APIs externas" ni librerías adicionales innecesarias.
+
+Se utilizó para definir el alcance técnico inicial y las restricciones del MVP.
+
+> "Crea una función separada que reciba el texto escrito por el usuario" e identifique consumo de electricidad, vehículos, kilómetros y combustible. "Mantén esta lógica separada de la interfaz."
+
+Se utilizó para separar el parser de actividades de los componentes visuales.
+
+> "La funcionalidad actual funciona, pero detecté un problema real de experiencia de usuario". "No cambies absolutamente nada de la lógica de análisis ni de cálculo. Trabaja únicamente sobre presentación y estilos."
+
+Se utilizó para mejorar la apariencia de forma acotada, sin alterar el análisis de emisiones.
+
+> "Antes de modificar código: analiza qué elementos están generando demasiado espacio vertical" e "identifica qué archivos habría que modificar". "Primero explícame la solución. No modifiques archivos todavía."
+
+Se utilizó para investigar el problema de layout antes de aplicar cambios.
+
+> "Haz ahora una revisión de QA del proyecto completo". "IMPORTANTE: No modifiques ningún archivo todavía." Se pidió revisar compilación, TypeScript, consola, valores no finitos, patrones de extracción, responsive, accesibilidad y dependencias.
+
+Se utilizó para identificar riesgos técnicos antes de realizar correcciones puntuales.
+
+## 5. Desarrollo iterativo
 
 - Se creó la estructura base de la aplicación web dentro de una carpeta independiente del proyecto existente.
 - Se construyó la interfaz principal con un campo de actividades, un botón de análisis y un bloque de resultados.
@@ -24,7 +46,7 @@ El punto de partida fue construir un MVP académico llamado EcoTrack AI con Next
 
 ![CAPTURA 1 — Primera versión de la interfaz](docs/evidencias/01-interfaz-inicial.jpeg)
 
-## 5. Problema encontrado durante el desarrollo
+## 6. Problema encontrado durante el desarrollo
 
 La primera versión de la interfaz utilizaba demasiado espacio vertical. Después de realizar el análisis, los resultados quedaban fuera del primer viewport y el usuario tenía que desplazarse para encontrarlos.
 
@@ -32,24 +54,24 @@ Primero se pidió a Codex analizar la causa sin modificar código. El análisis 
 
 ![CAPTURA 2 — Problema de layout detectado](docs/evidencias/03-problema-de-layout.jpeg)
 
-## 6. Feedback Loop
+## 7. Feedback Loop
 
 El desarrollo se realizó en ciclos cortos. Cada cambio se implementó con un alcance limitado, se verificó con compilación, linter, comprobaciones de TypeScript o pruebas locales de la lógica, y luego se ajustó según el feedback recibido. Este ciclo permitió corregir detalles de interfaz, interpretación de números y validación de datos sin rehacer el proyecto.
 
-## 7. Funcionalidad relacionada con IA
+## 8. Funcionalidad relacionada con IA
 
 El MVP simula una experiencia de procesamiento de lenguaje natural. Interpreta distintas expresiones relacionadas con consumo de electricidad, vehículos y kilómetros, y las convierte en datos estructurados para generar una estimación. Esta interpretación se implementa localmente con normalización de texto y expresiones regulares; no utiliza un modelo externo ni una API de IA.
 
 ![CAPTURA 3 — Interfaz corregida y resultado del análisis](docs/evidencias/02-analisis-con-resultado.jpeg)
 
-## 8. Limitaciones
+## 9. Limitaciones
 
 - Los factores de emisión son aproximados y tienen fines demostrativos.
 - La estimación no constituye un inventario oficial de gases de efecto invernadero.
 - El reconocimiento de lenguaje natural es simplificado y depende de patrones definidos en el código.
 - La aplicación no incluye persistencia de datos, autenticación ni integraciones externas.
 
-## 9. Reflexión
+## 10. Reflexión
 
 Vibe Coding permitió pasar de una idea inicial a un MVP funcional trabajando principalmente mediante instrucciones en lenguaje natural. Codex ayudó a convertir esos pedidos en cambios concretos y verificables, mientras el desarrollador mantuvo el papel de validar resultados, limitar el alcance y dirigir las correcciones necesarias.
 

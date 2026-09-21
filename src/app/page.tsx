@@ -2,16 +2,39 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { estimateEmissions, type EmissionsEstimate } from "../lib/emissions-estimator";
+import type { EmissionsEstimate } from "../lib/emissions-estimator";
 
 export default function Home() {
   const [activityText, setActivityText] = useState("");
   const [estimate, setEstimate] = useState<EmissionsEstimate | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const hasDetectedData = estimate !== null && Object.keys(estimate.detectedData).length > 0;
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setEstimate(estimateEmissions(activityText));
+    setIsAnalyzing(true);
+    setAnalysisError(null);
+
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: activityText }),
+      });
+      const data = (await response.json()) as EmissionsEstimate | { error?: string };
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "No fue posible analizar la actividad.");
+      }
+
+      setEstimate(data as EmissionsEstimate);
+    } catch (error) {
+      setEstimate(null);
+      setAnalysisError(error instanceof Error ? error.message : "No fue posible analizar la actividad.");
+    } finally {
+      setIsAnalyzing(false);
+    }
   }
 
   return (
@@ -55,10 +78,12 @@ export default function Home() {
             />
             <button
               className="mt-4 w-full rounded-md bg-[#176b43] px-5 py-3.5 text-base font-semibold text-white shadow-[0_6px_14px_rgba(23,107,67,0.2)] transition hover:bg-[#105536] hover:shadow-[0_8px_18px_rgba(23,107,67,0.25)] focus:outline-none focus:ring-4 focus:ring-[#176b43]/20 focus:ring-offset-2"
+              disabled={isAnalyzing}
               type="submit"
             >
-              Analizar huella
+              {isAnalyzing ? "Analizando..." : "Analizar huella"}
             </button>
+            {analysisError ? <p className="mt-3 text-sm text-[#a53a32]" role="alert">{analysisError}</p> : null}
           </form>
         </section>
 
@@ -71,7 +96,13 @@ export default function Home() {
               </h2>
             </div>
             <span className="text-sm font-medium text-[#718075]">
-              {estimate ? (hasDetectedData ? "Análisis completado" : "Sin datos reconocibles") : "Pendiente de analizar"}
+              {isAnalyzing
+                ? "Analizando..."
+                : estimate
+                  ? hasDetectedData
+                    ? "Análisis completado"
+                    : "Sin datos reconocibles"
+                  : "Pendiente de analizar"}
             </span>
           </div>
           <div className="grid overflow-hidden rounded-lg border border-[#d9e2da] bg-white shadow-[0_8px_24px_rgba(26,57,36,0.05)] sm:grid-cols-3">
